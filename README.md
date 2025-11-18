@@ -34,14 +34,16 @@ This dashboard helps you analyze Medicare post-acute care utilization and paymen
    - This creates an automated, event-driven pipeline from **API → GCS → BigQuery (bronze)** with no manual intervention.
 
 3. **Data Transformation with Composer (Silver & Gold Layers)**
-   - **Cloud Composer (Airflow)** orchestrates downstream transformations using **BigQuery SQL DAGs**.
+   - **Cloud Composer (Airflow)** orchestrates downstream transformations using **DataProc Pyspark Job**.
    - DAG steps:
      1. **Silver Layer (`cms_silver`)**
-        - Cleans and standardizes the raw data (type casting, `*` → NULL, fixing numeric and percentage fields).
-        - Normalizes provider attributes (ID, name, city, state, ZIP).
-        - Adds derived fields such as `YEAR_DATE`, demographic percentages, diagnosis mix, and chronic condition prevalence.
-        - Stores a clean, analytics-ready **provider × year × service category** table.
+         - Executed via a Dataproc PySpark job.
+         - Cleans and standardizes the raw data (type casting, * → NULL, fixing numeric and percentage fields).
+         - Normalizes provider attributes (ID, name, city, state, ZIP).
+         - Adds derived fields such as YEAR_DATE, demographic percentages, diagnosis mix, and chronic condition prevalence.
+         - Stores a clean, analytics-ready provider × year × service category table.
      2. **Gold Layer Tables**
+        Executed via a Dataproc PySpark job.
         - **State-level summary table**: aggregates silver data by state and year to compute total payments, charges, beneficiaries, and risk metrics.
         - **Provider-level metrics table**: calculates provider-level KPIs such as:
           - Payment per beneficiary
