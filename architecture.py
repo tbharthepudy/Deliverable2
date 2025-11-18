@@ -34,7 +34,7 @@ with Diagram(
         cms_api >> Edge(label="Data Ingestion") >> cloud_functions \
                 >> Edge(label="Event Trigger") >> gcs
         gcs >> Edge(label="Event Trigger") >> bigquery_raw
-        bigquery_raw >> Edge(label="Transformation") >> silver_bigquery
+        bigquery_raw >> Edge(label="DataProc") >> silver_bigquery
 
     with Cluster("Frontend & Containerization", direction="TB"):
         streamlit = Custom("Streamlit",
